@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FilmProject.DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="ProjectId" Type="int" Nullable="false" />
+    <Property Name="StartDate" Type="datetime" Nullable="false" />
+    <Property Name="EndDate" Type="datetime" Nullable="false" />
+    <Property Name="Credits" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'FilmProject.Data.dbo.UserProject' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="UserProject">
+    <Key>
+      <PropertyRef Name="IsActive" />
+      <PropertyRef Name="AssignedDate" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="AssignedDate" Type="datetime" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="ProjectId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_dbo_FilmProjects_dbo_Project_ProjectId">
+    <End Role="Project" Type="Self.Project" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserProject" Type="Self.UserProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="UserProject">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FilmProjects_dbo_User_UserId">
+    <End Role="User" Type="Self.User" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserProject" Type="Self.UserProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserProject">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FilmProjectDataModelStoreContainer">
+    <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserProject" EntityType="Self.UserProject" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [UserProject].[IsActive] AS [IsActive], 
+    [UserProject].[AssignedDate] AS [AssignedDate], 
+    [UserProject].[UserId] AS [UserId], 
+    [UserProject].[ProjectId] AS [ProjectId]
+    FROM [dbo].[UserProject] AS [UserProject]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_dbo_FilmProjects_dbo_Project_ProjectId" Association="Self.FK_dbo_FilmProjects_dbo_Project_ProjectId">
+      <End Role="Project" EntitySet="Project" />
+      <End Role="UserProject" EntitySet="UserProject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FilmProjects_dbo_User_UserId" Association="Self.FK_dbo_FilmProjects_dbo_User_UserId">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserProject" EntitySet="UserProject" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

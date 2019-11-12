@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FilmProject.DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Credits" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="UserProjects" Relationship="Self.FK_dbo_FilmProjects_dbo_Project_ProjectId" FromRole="Project" ToRole="UserProject" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="UserProjects" Relationship="Self.FK_dbo_FilmProjects_dbo_User_UserId" FromRole="User" ToRole="UserProject" />
+  </EntityType>
+  <EntityType Name="UserProject">
+    <Key>
+      <PropertyRef Name="IsActive" />
+      <PropertyRef Name="AssignedDate" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="AssignedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Project" Relationship="Self.FK_dbo_FilmProjects_dbo_Project_ProjectId" FromRole="UserProject" ToRole="Project" />
+    <NavigationProperty Name="User" Relationship="Self.FK_dbo_FilmProjects_dbo_User_UserId" FromRole="UserProject" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_dbo_FilmProjects_dbo_Project_ProjectId">
+    <End Role="Project" Type="Self.Project" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserProject" Type="Self.UserProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="UserProject">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FilmProjects_dbo_User_UserId">
+    <End Role="User" Type="Self.User" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserProject" Type="Self.UserProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserProject">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DataContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Projects" EntityType="Self.Project" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="UserProjects" EntityType="Self.UserProject" />
+    <AssociationSet Name="FK_dbo_FilmProjects_dbo_Project_ProjectId" Association="Self.FK_dbo_FilmProjects_dbo_Project_ProjectId">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="UserProject" EntitySet="UserProjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FilmProjects_dbo_User_UserId" Association="Self.FK_dbo_FilmProjects_dbo_User_UserId">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserProject" EntitySet="UserProjects" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

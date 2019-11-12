@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/Index.js"></script>
+</head>
+<body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" id="userDropDown" data-toggle="dropdown" href="#">User (---)<span class="caret"></span></a>
+                        <ul class="dropdown-menu"> 
+                            <li  onclick="changeUser(this, 1)">Leonardo Dicaprio</li>
+                            <li onclick="changeUser(this, 2)">Mahershala Ali</li>
+                            <li  onclick="changeUser(this, 3)">Benicio Del Toro</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
